@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
+    <!--<p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
@@ -26,16 +26,73 @@
       <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+    </ul>-->
+    -----
+    <p>Todo list JSON data fetched via Axios with basic auth</p>
+    <ul v-if="todos && todos.length">
+      <li v-for="todo of todos" v-bind:key="todo">
+        <p><strong>{{todo.title}}</strong></p>
+        <p>{{todo.description}}</p>
+      </li>
+    </ul>
+
+    <ul v-if="errors && errors.length">
+      <li v-for="error of errors" v-bind:key="error">
+        {{error.message}}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+//import {HTTP} from './http-common'
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      todos: [],
+      errors: []
+    }
+  },
+
+  // Fetches posts when the component is created.
+  created() {
+    const api_url = process.env.VUE_APP_API_URL
+    const username = process.env.VUE_APP_USERNAME
+    const password = process.env.VUE_APP_PASSWORD
+    const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
+    /*const headers = {
+      'Authorization': {username: 'jason', password:'decode'},
+      'Content-Type': 'application/json',
+    };*/
+    axios.get(`${api_url}`, { 
+        headers: {
+          'Authorization': `Basic ${token}`
+        }
+      })
+    .then(response => {
+      // JSON responses are automatically parsed.
+      this.todos = response.data
+    })
+    .catch(e => {
+      this.errors.push(e)
+    })
   }
+
+  /*created() {
+    HTTP.get(`posts`)
+    .then(response => {
+      this.posts = response.data
+    })
+    .catch(e => {
+      this.errors.push(e)
+    })
+  }*/  
 }
 </script>
 
