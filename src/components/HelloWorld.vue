@@ -27,19 +27,21 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>-->
-    <h3>Todo list JSON data fetched via Axios with basic auth</h3>
-    -----
-    <ul v-if="todos && todos.length">
-      <li v-for="todo of todos" v-bind:key="todo">
-        <p><strong>{{todo.id}}. {{todo.title}}</strong> - {{todo.description}}</p>
-      </li>
-    </ul>
+    <div class="todolist">
+      <h3>Todo list JSON data fetched via Axios with basic auth</h3>
+      -----
+      <ul v-if="todos && todos.length">
+        <li v-for="todo of todos" v-bind:key="todo">
+          <p><strong>{{todo.id}}. {{todo.title}}</strong> - {{todo.description}}</p>
+        </li>
+      </ul>
 
-    <ul v-if="errors && errors.length">
-      <li v-for="error of errors" v-bind:key="error">
-        {{error.message}}
-      </li>
-    </ul>
+      <ul v-if="errors && errors.length">
+        <li v-for="error of errors" v-bind:key="error">
+          {{error.message}}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -111,4 +113,10 @@ li {
 a {
   color: #42b983;
 }
+
+/*.todolist {
+  width: 20rem;
+  text-align: left;
+  margin: 0 30rem 0 30rem;
+}*/
 </style>
