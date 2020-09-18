@@ -41,6 +41,13 @@
           {{error.message}}
         </li>
       </ul>
+      -----
+      <input type="text" v-model="todoBody" @change="todoBody()"/>
+      <ul v-if="errors && errors.length">
+        <li v-for="error of errors" v-bind:key="error">
+          {{error.message}}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -57,7 +64,8 @@ export default {
   data() {
     return {
       todos: [],
-      errors: []
+      errors: [],
+      todoBody: ''
     }
   },
 
@@ -83,7 +91,7 @@ export default {
     .catch(e => {
       this.errors.push(e)
     })
-  }
+  },
 
   /*created() {
     HTTP.get(`posts`)
@@ -93,7 +101,24 @@ export default {
     .catch(e => {
       this.errors.push(e)
     })
-  }*/  
+  }*/
+  // Pushes todos to the server when called
+  todoPost() {
+    const api_url = process.env.VUE_APP_API_URL
+    const username = process.env.VUE_APP_USERNAME
+    const password = process.env.VUE_APP_PASSWORD
+    const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
+    axios.post(`${api_url}`, {
+      headers: {
+        'Authorization': `Basic ${token}`
+      },
+      body: this.todoBody
+    })
+    .then(response => {})
+    .catch(e => {
+      this.errors.push(e)
+    })
+  }
 }
 </script>
 
