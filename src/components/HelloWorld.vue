@@ -42,7 +42,7 @@
         </li>
       </ul>
       -----
-      <input type="text" v-model="postBody" @change="postPost()"/>
+      <input type="json" v-model="postBody" @change="postPost()"/>
       <ul v-if="errors && errors.length">
         <li v-for="error of errors" v-bind:key="error">
           {{error.message}}
@@ -109,12 +109,14 @@ export default {
     const password = process.env.VUE_APP_PASSWORD
     const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
     axios.post(`${api_url}`, {
+      method: "POST",
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Basic ${token}`
       },
       body: this.postBody
     })
-    .then(response => {})
+    .then(response => this.todoId = response.data.id)
     .catch(e => {
       this.errors.push(e)
     })
