@@ -42,7 +42,7 @@
         </li>
       </ul>
       -----
-      <input type="text" v-model="todoBody" @change="todoBody()"/>
+      <input type="text" v-model="postBody" @change="postPost()"/>
       <ul v-if="errors && errors.length">
         <li v-for="error of errors" v-bind:key="error">
           {{error.message}}
@@ -65,7 +65,7 @@ export default {
     return {
       todos: [],
       errors: [],
-      todoBody: ''
+      postBody: ''
     }
   },
 
@@ -103,7 +103,7 @@ export default {
     })
   }*/
   // Pushes todos to the server when called
-  todoPost() {
+  postPost() {
     const api_url = process.env.VUE_APP_API_URL
     const username = process.env.VUE_APP_USERNAME
     const password = process.env.VUE_APP_PASSWORD
@@ -112,7 +112,7 @@ export default {
       headers: {
         'Authorization': `Basic ${token}`
       },
-      body: this.todoBody
+      body: this.postBody
     })
     .then(response => {})
     .catch(e => {
