@@ -42,7 +42,8 @@
         </li>
       </ul>
       -----
-      <input type="json" v-model="postBody" @change="postPost()"/>
+      <input type="texxt" v-model="postBody"/>
+      <button v-on:click="submit()">Submit</button>
       <ul v-if="errors && errors.length">
         <li v-for="error of errors" v-bind:key="error">
           {{error.message}}
@@ -70,7 +71,7 @@ export default {
   },
 
   // Fetches posts when the component is created.
-  created() {
+  /*created() {
     const api_url = process.env.VUE_APP_API_URL
     const username = process.env.VUE_APP_USERNAME
     const password = process.env.VUE_APP_PASSWORD
@@ -79,7 +80,7 @@ export default {
       'Authorization': {username: 'jason', password:'decode'},
       'Content-Type': 'application/json',
     };*/
-    axios.get(`${api_url}`, { 
+    /*axios.get(`${api_url}`, { 
         headers: {
           'Authorization': `Basic ${token}`
         }
@@ -91,7 +92,7 @@ export default {
     .catch(e => {
       this.errors.push(e)
     })
-  },
+  },*/
 
   /*created() {
     HTTP.get(`posts`)
@@ -103,23 +104,26 @@ export default {
     })
   }*/
   // Pushes todos to the server when called
-  postPost() {
-    const api_url = process.env.VUE_APP_API_URL
-    const username = process.env.VUE_APP_USERNAME
-    const password = process.env.VUE_APP_PASSWORD
-    const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
-    axios.post(`${api_url}`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${token}`
-      },
-      body: this.postBody
-    })
-    .then(response => this.todoId = response.data.id)
-    .catch(e => {
-      this.errors.push(e)
-    })
+  methods: {
+    submit() {
+      const api_url = process.env.VUE_APP_API_URL
+      const username = process.env.VUE_APP_USERNAME
+      const password = process.env.VUE_APP_PASSWORD
+      const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
+      axios.post(`${api_url}`, {
+        headers: {
+          //'Content-Type': 'application/json',
+          'Authorization': `Basic ${token}`
+        },
+        body: this.postBody
+      })
+      .then(function(response){
+        // handle success
+      }.bind(this))
+      .catch(e => {
+        this.errors.push(e)
+      })
+    }
   }
 }
 </script>
