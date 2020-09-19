@@ -117,9 +117,7 @@ export default {
         },
         body: this.postBody
       })
-      .then(function(response){
-        // handle success
-      }.bind(this))
+      .then(response => {this.todos = response.data})
       .catch(e => {
         this.errors.push(e)
       })
