@@ -36,25 +36,58 @@
         </li>
       </ul>
 
-      <ul v-if="errors && errors.length">
-        <li v-for="error of errors" v-bind:key="error">
-          {{error.message}}
+      <ul v-if="getErrors && getErrors.length">
+        <li v-for="getError of getErrors" v-bind:key="getError">
+          {{getError.message}}
         </li>
       </ul>
       -----
-      <input type="texxt" v-model="postBody"/>
-      <button v-on:click="submit()">Submit</button>
+      
       <ul v-if="errors && errors.length">
         <li v-for="error of errors" v-bind:key="error">
           {{error.message}}
         </li>
       </ul>
+      <div class="container">
+      <div class="todo-form">
+        <form @submit.prevent="onSubmit" class="add-item-form">
+          <div class="input">
+            <label for="title">Title</label>
+            <input
+               type="text"
+               id="title"
+               v-model="title" 
+               required>
+          </div>
+          <div class="input">
+            <label for="name">Description</label>
+            <input
+              type="text"
+              id="description"
+              v-model="description"
+              required>
+          </div>
+          <div class="input">
+            <label for="finished">Finished?</label>
+            <input
+              type="text"
+              id="finished"
+              v-model="finished"
+              required>
+          </div>
+          <div class="submit">
+            <button class="btn" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+//import qs from 'qs';
 //import {HTTP} from './http-common'
 
 export default {
@@ -65,22 +98,20 @@ export default {
   data() {
     return {
       todos: [],
-      errors: [],
-      postBody: ''
+      getErrors: [],
+      postBody: '',
+      formData: ''
     }
   },
 
   // Fetches posts when the component is created.
-  /*created() {
+  created() {
     const api_url = process.env.VUE_APP_API_URL
     const username = process.env.VUE_APP_USERNAME
     const password = process.env.VUE_APP_PASSWORD
     const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
-    /*const headers = {
-      'Authorization': {username: 'jason', password:'decode'},
-      'Content-Type': 'application/json',
-    };*/
-    /*axios.get(`${api_url}`, { 
+    //add const headers here if not using env
+    axios.get(`${api_url}`, { 
         headers: {
           'Authorization': `Basic ${token}`
         }
@@ -90,9 +121,9 @@ export default {
       this.todos = response.data
     })
     .catch(e => {
-      this.errors.push(e)
+      this.getErrors.push(e)
     })
-  },*/
+  },
 
   /*created() {
     HTTP.get(`posts`)
@@ -105,23 +136,33 @@ export default {
   }*/
   // Pushes todos to the server when called
   methods: {
-    submit() {
+    onSubmit() {
       const api_url = process.env.VUE_APP_API_URL
       const username = process.env.VUE_APP_USERNAME
       const password = process.env.VUE_APP_PASSWORD
       const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
-      axios.post(`${api_url}`, {
+      const formData = {
+      title: this.title,
+      description: this.description,
+      finished: this.finished      
+      }
+      axios({
+        method: "POST",
+        url: `${api_url}`,
         headers: {
-          //'Content-Type': 'application/json',
-          'Authorization': `Basic ${token}`
+          "Authorization": `Basic ${token}`,
+          "Content-Type": "application/json"
         },
-        body: this.postBody
+        data: formData
       })
-      .then(response => {this.todos = response.data})
+      .then(response => { 
+        console.log(response);
+      })
       .catch(e => {
-        this.errors.push(e)
+      this.errors.push(e)
       })
-    }
+    },
+    
   }
 }
 </script>
@@ -148,4 +189,95 @@ a {
   text-align: left;
   margin: 0 30rem 0 30rem;
 }*/
+
+.container {
+    font-family: system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.todo-form {
+    background: #FFF;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 3px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.08);
+    width: 50%;
+    max-width: 900px;
+}
+
+.todo-form > input, .todo-form > select {
+    width: 100%;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);
+    border: 1px solid #F1F5F8;
+    color: #606F7B;
+    padding: .5rem .75rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    letter-spacing: .5px;
+    margin: .5rem 0;
+    text-align: left;
+}
+
+.add-item-form, .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-item-form input label {
+    width: 70%;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);
+    border: 1px solid #F1F5F8;
+    color: #606F7B;
+    padding: .5rem .75rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    letter-spacing: .5px;
+    margin: .5rem 0;
+}
+
+.btn {
+    border: none;
+    border-radius: 3px;
+    margin: auto 0;
+    padding: .5rem .75rem;
+    flex-shrink: 0;
+    cursor: pointer;
+    font-size: .9rem;
+    letter-spacing: .5px;
+    transition: all .1s ease-in;
+}
+
+.btn[disabled] {
+    background: #8795A1;
+}
+
+.btn[disabled]:hover {
+    background: #606F7B;
+}
+
+.btn-primary {
+    background: #6CB2EB;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #3490DC;
+}
+
+.btn-cancel {
+    background: #EF5753;
+    color: #fff;
+}
+
+.btn-cancel:hover {
+    background: #E3342F;
+    color: #fff;
+}
 </style>
