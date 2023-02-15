@@ -28,7 +28,7 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>-->
     <div class="todolist">
-      <h3>Todo list JSON data fetched via Axios with basic auth</h3>
+      <h3>Todo list JSON data fetched via Axios with basic auth - by <a href="https://twitter.com/jasonleowsg">@jasonleowsg</a></h3>
       -----
       <ul v-if="todos && todos.length">
         <li v-for="todo of todos" v-bind:key="todo">
